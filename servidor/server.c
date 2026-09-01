@@ -1,16 +1,17 @@
-/* Servidor TCP Echo - Fase 1 (SDTR)
- * Acepta un cliente a la vez, devuelve cada mensaje con contador.
- * Compilar: gcc -o server server.c
- * Probar:   nc localhost 49152
- */
+/* 
+ Servidor TCP Echo
+ Acepta un cliente a la vez, devuelve cada mensaje con contador.
+*/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-#include <signal.h>
+// Imports
+#include <stdio.h>    // input - output: printf, perror, snprintf
+#include <stdlib.h>   // exit()
+#include <string.h>   // memset, strlen
+#include <unistd.h>   // read, write, close (POSIX)
+#include <errno.h>    // perror usa esto para mostrar errores
+#include <signal.h>   // signal, sig_atomic_t para Ctrl+C
 
+// <winsock2.h>/<sys/socket.h> para trabajar con sockets
 #ifdef _WIN32
     #include <winsock2.h>
     #include <ws2tcpip.h>
@@ -21,9 +22,9 @@
     #include <arpa/inet.h>
 #endif
 
-#define PUERTO 49152
+#define PUERTO 49152 // Puerto del sv
 #define BUFFER_SIZE 1024
-#define MENSAJE_BIENVENIDA "=== Bienvenido al servidor echo (Fase 1) ===\nEscribe algo y te lo devolvere con el numero de mensaje.\n"
+#define MENSAJE_BIENVENIDA "=== Bienvenido al servidor echo ===\nEscribe algo y te lo devolvere con el numero de mensaje.\n"
 
 // Bandera para cierre ordenado con Ctrl+C (volatile + sig_atomic_t por seguridad en signals)
 static volatile sig_atomic_t servidor_activo = 1;
@@ -67,7 +68,7 @@ int main(void) {
     memset(&direccion_servidor, 0, sizeof(direccion_servidor));
     direccion_servidor.sin_family = AF_INET;
     direccion_servidor.sin_addr.s_addr = INADDR_ANY;
-    direccion_servidor.sin_port = htons(PUERTO);
+    direccion_servidor.sin_port = htons(PUERTO); // host -> network (byte order)
 
     // Bind: asociar socket a IP:puerto
     if (bind(socket_servidor, (struct sockaddr *)&direccion_servidor, sizeof(direccion_servidor)) < 0) {
@@ -99,9 +100,9 @@ int main(void) {
         }
 
         char ip_cliente[INET_ADDRSTRLEN];
-        inet_ntop(AF_INET, &direccion_cliente.sin_addr, ip_cliente, INET_ADDRSTRLEN);
-        printf("[SERVIDOR] Cliente conectado! IP: %s | Puerto: %d\n",
-               ip_cliente, ntohs(direccion_cliente.sin_port));
+    inet_ntop(AF_INET, &direccion_cliente.sin_addr, ip_cliente, INET_ADDRSTRLEN); // binario -> "192.168.1.50"
+    printf("[SERVIDOR] Cliente conectado! IP: %s | Puerto: %d\n",
+           ip_cliente, ntohs(direccion_cliente.sin_port)); // ntohs: network -> host (byte order)
 
         // Enviar bienvenida
         send(socket_cliente, MENSAJE_BIENVENIDA, strlen(MENSAJE_BIENVENIDA), 0);
