@@ -57,7 +57,7 @@ int main(void) {
 
     // Permitir reusar puerto inmediatamente (evita "Address already in use")
     int opcion = 1;
-    if (setsockopt(socket_servidor, SOL_SOCKET, SO_REUSEADDR, &opcion, sizeof(opcion)) < 0) {
+    if (setsockopt(socket_servidor, SOL_SOCKET, SO_REUSEADDR, (const char *)&opcion, sizeof(opcion)) < 0) {
         perror("[SERVIDOR] ERROR: No se pudo configurar SO_REUSEADDR");
         close(socket_servidor);
         exit(EXIT_FAILURE);
