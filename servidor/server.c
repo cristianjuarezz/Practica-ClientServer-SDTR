@@ -152,7 +152,7 @@ int main(void) {
         while (1) {
             // RECIBIR
             memset(buffer_entrada, 0, BUFFER_SIZE);
-            bytes_recibidos = read(socket_cliente, buffer_entrada, BUFFER_SIZE - 1);
+            bytes_recibidos = recv(socket_cliente, buffer_entrada, BUFFER_SIZE - 1, 0);
 
             // 0 = cliente cerro conexion, <0 = error
             if (bytes_recibidos <= 0) {
