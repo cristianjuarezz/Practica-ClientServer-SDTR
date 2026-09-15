@@ -58,11 +58,13 @@ gcc -o client.exe cliente/client.c -lws2_32
 
 ```bash
 # Linux/macOS/WSL
-nc localhost 49152
+./client
 
-# Windows (usando ncat de Nmap)
-ncat localhost 49152
+# Windows
+.\client.exe
 ```
+
+Escribí mensajes y presioná Enter. Escribí `salir` o Ctrl+D (Linux) / Ctrl+Z (Windows) para desconectarte.
 
 ## Herramientas instaladas (Windows)
 
